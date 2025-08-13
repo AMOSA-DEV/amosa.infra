@@ -59,6 +59,13 @@ resource "aws_db_instance" "amosa_db" {
   final_snapshot_identifier = "amosa-db-final-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
   delete_automated_backups = false
 
+  # final_snapshot_identifier의 변경사항을 무시
+  lifecycle {
+    ignore_changes = [
+      final_snapshot_identifier
+    ]
+  }
+
   tags = {
     Name        = "amosa-db"
     Environment = var.environment
