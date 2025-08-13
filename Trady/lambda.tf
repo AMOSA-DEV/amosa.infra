@@ -29,14 +29,15 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
 
 # Lambda 함수 1: RequestSlackBotWhenECSComplete
 resource "aws_lambda_function" "request_slack_bot" {
-  filename         = "request_slack_bot.zip"
   function_name    = "amslambda-RequestSlackBotWhenECSComplete"
   role            = aws_iam_role.lambda_execution_role.arn
   handler         = "index.handler"
   runtime         = "python3.9"
   timeout         = 60
 
-  # 임시 코드 파일 생성이 필요 (별도로 생성 예정)
+  # 간단한 더미 ZIP 파일 사용
+  filename = "${path.module}/lambda_functions/request_slack_bot.zip"
+
   depends_on = [aws_iam_role_policy_attachment.lambda_basic_execution]
 
   tags = {
@@ -47,14 +48,15 @@ resource "aws_lambda_function" "request_slack_bot" {
 
 # Lambda 함수 2: AllocatePublicIPWhenRestartEC2
 resource "aws_lambda_function" "allocate_public_ip" {
-  filename         = "allocate_public_ip.zip"
   function_name    = "amslambda-AllocatePublicIPWhenRestartEC2"
   role            = aws_iam_role.lambda_execution_role.arn
   handler         = "index.handler"
   runtime         = "python3.9"
   timeout         = 60
 
-  # 임시 코드 파일 생성이 필요 (별도로 생성 예정)
+  # 간단한 더미 ZIP 파일 사용
+  filename = "${path.module}/lambda_functions/allocate_public_ip.zip"
+
   depends_on = [aws_iam_role_policy_attachment.lambda_basic_execution]
 
   tags = {

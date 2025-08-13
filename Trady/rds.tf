@@ -3,10 +3,10 @@ resource "aws_security_group" "amosa_rds_sg" {
   name_prefix = "amosa-rds-sg"
   vpc_id      = aws_vpc.amosa_vpc.id
 
-  # EC2에서만 MySQL/Aurora 접근 허용 (3306번 포트)
+  # EC2에서만 PostgreSQL 접근 허용 (5432번 포트)
   ingress {
-    from_port       = 3306
-    to_port         = 3306
+    from_port       = 5432
+    to_port         = 5432
     protocol        = "tcp"
     security_groups = [aws_security_group.amosa_ec2_sg.id]
   }
@@ -34,8 +34,8 @@ resource "aws_db_instance" "amosa_db" {
   allocated_storage      = 20
   max_allocated_storage  = 100
   storage_type          = "gp2"
-  engine                = "mysql"
-  engine_version        = "8.0"
+  engine                = "postgres"
+  engine_version        = "15.7"
   instance_class        = "db.t4g.micro"
   
   db_name  = var.db_name

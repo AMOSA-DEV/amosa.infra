@@ -117,8 +117,8 @@ output "ssh_connection" {
   value       = "ssh -i ~/.ssh/amosa-key.pem ec2-user@${aws_instance.amosa_ec2.public_ip}"
 }
 
-output "mysql_connection" {
-  description = "RDS MySQL 연결 정보 (EC2에서 실행)"
-  value       = "mysql -h ${aws_db_instance.amosa_db.endpoint} -P ${aws_db_instance.amosa_db.port} -u ${var.db_username} -p ${var.db_name}"
+output "postgresql_connection" {
+  description = "RDS PostgreSQL 연결 정보 (EC2에서 실행)"
+  value       = "psql -h ${aws_db_instance.amosa_db.endpoint} -p ${aws_db_instance.amosa_db.port} -U ${var.db_username} -d ${var.db_name}"
   sensitive   = false
 } 
