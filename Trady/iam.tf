@@ -86,4 +86,48 @@ resource "aws_iam_role_policy" "lambda_ec2_policy" {
       }
     ]
   })
+}
+
+# =============================================================================
+# EC2 SSM 접속을 위한 IAM 리소스
+# =============================================================================
+
+# EC2용 SSM 접속 역할
+resource "aws_iam_role" "ec2_ssm_role" {
+  name = "amsrole-ec2-ssm"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name        = "amsrole-ec2-ssm"
+    Environment = var.environment
+  }
+}
+
+# SSM 관리 인스턴스 코어 정책 연결
+resource "aws_iam_role_policy_attachment" "ec2_ssm_managed_instance_core" {
+  role       = aws_iam_role.ec2_ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+# EC2 인스턴스 프로파일 생성
+resource "aws_iam_instance_profile" "ec2_ssm_profile" {
+  name = "amsprofile-ec2-ssm"
+  role = aws_iam_role.ec2_ssm_role.name
+
+  tags = {
+    Name        = "amsprofile-ec2-ssm"
+    Environment = var.environment
+  }
 } 

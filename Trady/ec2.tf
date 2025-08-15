@@ -54,15 +54,23 @@ resource "aws_instance" "amosa_ec2" {
   key_name               = aws_key_pair.amosa_key.key_name
   vpc_security_group_ids = [aws_security_group.amosa_ec2_sg.id]
   subnet_id              = aws_subnet.amosa_public_subnet.id
+  iam_instance_profile   = aws_iam_instance_profile.ec2_ssm_profile.name
 
-  # 사용자 데이터 스크립트 (기본 설정)
+  # 사용자 데이터 스크립트 (기본 설정 + SSM 에이전트)
   user_data = <<-EOF
               #!/bin/bash
               yum update -y
+              
+              # Docker 설치 및 설정
               yum install -y docker
               systemctl start docker
               systemctl enable docker
               usermod -a -G docker ec2-user
+              
+              # SSM 에이전트 설치 및 시작 (Amazon Linux 2에는 기본 설치되어 있지만 확실히 하기 위해)
+              yum install -y amazon-ssm-agent
+              systemctl enable amazon-ssm-agent
+              systemctl start amazon-ssm-agent
               EOF
 
   tags = {
