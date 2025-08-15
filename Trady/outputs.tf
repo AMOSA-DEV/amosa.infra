@@ -121,4 +121,20 @@ output "postgresql_connection" {
   description = "RDS PostgreSQL 연결 정보 (EC2에서 실행)"
   value       = "psql -h ${aws_db_instance.amosa_db.endpoint} -p ${aws_db_instance.amosa_db.port} -U ${var.db_username} -d ${var.db_name}"
   sensitive   = false
+}
+
+# GitHub Actions 관련 정보
+output "github_actions_role_arn" {
+  description = "GitHub Actions OIDC 역할 ARN"
+  value       = aws_iam_role.github_actions_role.arn
+}
+
+output "github_actions_role_name" {
+  description = "GitHub Actions OIDC 역할 이름"
+  value       = aws_iam_role.github_actions_role.name
+}
+
+output "github_oidc_provider_arn" {
+  description = "GitHub OIDC Provider ARN"
+  value       = aws_iam_openid_connect_provider.github_oidc.arn
 } 
