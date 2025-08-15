@@ -215,6 +215,13 @@ resource "aws_iam_policy" "github_actions_ssm_policy" {
           "ssm:GetCommandInvocation"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances"
+        ]
+        Resource = "*"
       }
     ]
   })
